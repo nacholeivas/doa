@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ATLANTIS</title>
+  <link rel="stylesheet" href="./style.css" />
+  
+</head>
+<body>
+
+  <!-- ✅ AUTH SCREEN (LOGIN / REGISTER) -->
+  <div id="authScreen" class="auth-screen">
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <button id="tabLogin" class="auth-tab active" type="button">Iniciar sesión</button>
+        <button id="tabRegister" class="auth-tab" type="button">Registrarse</button>
+      </div>
+
+      <div id="loginPanel" class="auth-panel">
+        <h2>Bienvenido</h2>
+        <p class="auth-sub">Entrá para jugar</p>
+
+        <label class="auth-label">Usuario o Email</label>
+        <input id="loginUser" class="auth-input" type="text" placeholder="ej: nacho / nacho@mail.com">
+
+        <label class="auth-label">Contraseña</label>
+        <input id="loginPass" class="auth-input" type="password" placeholder="••••••••">
+
+        <button id="btnLogin" class="auth-btn" type="button">Entrar</button>
+
+        <div id="authMsgLogin" class="auth-msg"></div>
+      </div>
+
+      <div id="registerPanel" class="auth-panel hidden auth-register-bg">
+        <div class="auth-register-overlay">
+          <h2>Crear cuenta</h2>
+          <p class="auth-sub">Registrate para guardar tu progreso</p>
+
+          <label class="auth-label">Usuario</label>
+          <input id="regUser" class="auth-input" type="text" placeholder="ej: nacho">
+
+          <label class="auth-label">Email</label>
+          <input id="regEmail" class="auth-input" type="email" placeholder="ej: nacho@mail.com">
+
+          <label class="auth-label">Contraseña</label>
+          <input id="regPass" class="auth-input" type="password" placeholder="mínimo 4">
+
+          <button id="btnRegister" class="auth-btn" type="button">Crear cuenta</button>
+
+          <div id="authMsgRegister" class="auth-msg"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ✅ /AUTH SCREEN -->
+
+  <div id="ui-root">
+    <div id="topbar">
+      <div class="brand">ATLANTIS</div>
+
+      <div class="resources">
+        <span>🪵 <b id="wood">0</b></span>
+        <span>🪨 <b id="stone">0</b></span>
+        <span>⛓️ <b id="iron">0</b></span>
+        <span>🍞 <b id="food">0</b></span>
+        <span>🪙 <b id="gold">0</b></span>
+        <span>👥 <b id="poblacion">0</b></span>
+      </div>
+
+      <div class="meta">✊ Poder: <b id="power">0</b></div>
+    </div>
+
+    <div id="layout">
+      <!-- LEFT -->
+      <div id="leftpanel">
+        <button class="btn btn-primary" id="btnCity">🏰 City</button>
+        <button class="btn btn-primary" id="btnField">🌱 Field</button>
+        <button class="btn btn-primary" id="btnInventario"> Inventory</button>
+        <button class="btn" id="btnWorld">🗺️ Map</button>
+        <button class="btn" id="btnTroops">🛡️ Troops</button>
+        <button class="btn" id="btnResearch">🔬 Research</button>
+        <button class="btn" id="btnMissions">✅ Misiones</button>
+        <button class="btn" id="btnMensajes">✉️ Mensajes</button>
+      </div>
+
+      <!-- CENTER GAME -->
+      <div id="gamewrap">
+        <div id="game">
+          <div id="fieldView" class="hidden">
+            <img src="assets/field.png" id="fieldBg" alt="Field" />
+          </div>
+          
+          <!-- MAP VIEW -->
+          <div id="mapView" class="hidden">
+            <div class="map-search">
+              <input type="text" id="mapSearchInput" class="map-search-input" placeholder="Buscar coordenadas (ej: 150:200)">
+              <button id="mapSearchBtn" class="map-search-btn">Buscar</button>
+            </div>
+            <div class="map-wrapper" id="mapWrapper">
+              <!-- Grid de imágenes del mapa 3x3 -->
+              <div class="map-grid">
+                <img src="assets/map.png" alt="Map" class="map-tile">
+                <img src="assets/map.png" alt="Map" class="map-tile">
+                <img src="assets/map.png" alt="Map" class="map-tile">
+                <img src="assets/map.png" alt="Map" class="map-tile">
+                <img src="assets/map.png" alt="Map" class="map-tile">
+                <img src="assets/map.png" alt="Map" class="map-tile">
+                <img src="assets/map.png" alt="Map" class="map-tile">
+                <img src="assets/map.png" alt="Map" class="map-tile">
+                <img src="assets/map.png" alt="Map" class="map-tile">
+              </div>
+              <div id="mapZones" class="map-zones"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div id="rightpanel">
+        <div class="panel">
+          <div class="panel-title">Selección</div>
+          <div id="selectionText" class="muted">Hacé click en un slot de edificio.</div>
+        </div>
+      </div> <!-- ✅ CIERRE rightpanel -->
+
+    </div> <!-- ✅ CIERRE layout -->
+  </div> <!-- ✅ CIERRE ui-root -->
+
+  <!-- ✅ Modal (arranca cerrado) -->
+  <div id="modal" class="hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div id="modal-title">Título</div>
+        <button class="btn small" data-close="modal">✕</button>
+      </div>
+      <div id="modal-body"></div>
+      <div class="modal-actions">
+        <button class="btn small btn-primary" data-close="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phaser + Game -->
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+  <script src="./game.js"></script>
+
+  <!-- (opcional) si lo seguís usando -->
+  <div id="buildingsModal" class="buildings-modal hidden">
+    <div class="buildings-panel">
+      <button id="closeBuildingsModal" class="close-buildings" aria-label="Cerrar">
+        <img src="salirbutton.png" alt="Cerrar">
+      </button>
+    </div>
+  </div>
+<!-- BOTÓN TROOPS (si ya lo tenés, solo asegurate de tener id="troopsBtn") -->
+<!-- <button id="troopsBtn">Troops</button> -->
+
+<!-- OVERLAY TROOPS -->
+<div id="troopsOverlay" class="troops-overlay troops-hidden">
+  <div class="troops-panel">
+    <div class="troops-topbar">
+      <div class="troops-title">Troop Training</div>
+      <button class="troops-close" id="closeTroopsBtn" type="button">✕</button>
+    </div>
+    <div id="troopsGrid" class="troops-grid"></div>
+  </div>
+</div>
+
+<!-- TROOP DETAIL OVERLAY -->
+<div id="troopDetailOverlay" class="troop-detail-overlay troop-detail-hidden">
+  <div class="troop-detail-panel">
+    <div class="troop-detail-topbar">
+      <div id="troopDetailTitle" class="troop-detail-title">Troop Name</div>
+      <button id="troopDetailClose" class="troop-detail-close" type="button">✕</button>
+    </div>
+
+    <div id="troopDetailBody" class="troop-detail-body"></div>
+
+    <div class="troop-detail-footer">
+      <div class="troop-train-count">
+        <label>Troop training count (Max: <span id="troopMaxCount">0</span>)</label>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <input type="number" id="troopTrainInput" class="troop-train-input" value="0" min="0">
+          <span class="troop-train-max-btn" id="troopTrainMaxBtn">Max</span>
+        </div>
+      </div>
+      <button id="troopTrainBtn" class="troop-train-btn" type="button">Train</button>
+    </div>
+  </div>
+</div>
+
+  <!-- =========================
+       RESEARCH (Overlay)
+       ========================= -->
+  <div id="researchOverlay" class="research-overlay research-hidden" aria-hidden="true">
+    <div class="research-panel" role="dialog" aria-modal="true" aria-labelledby="researchTitle">
+      <div class="research-topbar">
+        <div id="researchTitle" class="research-title">Research</div>
+        <button id="researchClose" class="research-close" type="button" aria-label="Close">✕</button>
+      </div>
+
+      <div id="researchGrid" class="research-grid"></div>
+    </div>
+  </div>
+
+  
+  <!-- =========================
+     RESEARCH OVERLAY (LIST)
+========================= -->
+<div id="researchOverlay" class="research-overlay research-hidden">
+  <div class="research-panel" role="dialog" aria-modal="true">
+    <div class="research-topbar">
+      <div class="research-title">Research</div>
+      <!-- IMPORTANTE: ID researchClose -->
+      <button id="researchClose" class="research-close" type="button">×</button>
+    </div>
+
+    <div id="researchGrid" class="research-grid"></div>
+  </div>
+</div>
+
+<!-- =========================
+     RESEARCH DETAIL OVERLAY
+========================= -->
+<div id="researchDetailOverlay" class="research-overlay research-hidden">
+  <div class="research-detail-panel" role="dialog" aria-modal="true">
+    <div class="research-detail-topbar">
+      <div id="researchDetailTitle" class="research-detail-title">Research Name</div>
+      <!-- IMPORTANTE: ID researchDetailClose -->
+      <button id="researchDetailClose" class="research-close" type="button">×</button>
+    </div>
+
+    <div id="researchDetailBody" class="research-detail-body"></div>
+
+    <div class="research-detail-footer">
+      <button id="researchDetailAction" class="research-action-btn" type="button">Upgrade</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================
+     DISMISS TROOP MODAL
+========================= -->
+<div id="dismissTroopModal" class="modal-overlay hidden">
+  <div class="dismiss-modal">
+    <button class="dismiss-close" id="dismissModalClose">×</button>
+    <h2 class="dismiss-title" id="dismissModalTitle">Troop dismiss count</h2>
+    <input type="number" id="dismissTroopInput" class="dismiss-input" value="1" min="1">
+    <div class="dismiss-buttons">
+      <button id="dismissConfirmBtn" class="dismiss-btn confirm-btn">Confirm</button>
+      <button id="dismissCancelBtn" class="dismiss-btn cancel-btn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================
+     ZONE INFO MODAL (para zonas del mapa)
+========================= -->
+<div id="zoneInfoModal" class="zone-info-overlay hidden">
+  <div class="zone-info-panel">
+    <button class="zone-info-close" id="zoneInfoClose">✕</button>
+    
+    <div class="zone-info-header">
+      <div class="zone-info-level" id="zoneInfoLevel">Lv.7</div>
+      <div class="zone-info-name" id="zoneInfoName">ZONE NAME</div>
+      <div class="zone-info-power">
+        <span id="zoneInfoPowerValue">0</span>
+        <span class="power-icon">🪙</span>
+      </div>
+    </div>
+    
+    <div class="zone-info-body">
+      <div class="zone-info-image-container">
+        <img id="zoneInfoImage" src="" alt="Zone" class="zone-info-image">
+      </div>
+      
+      <div class="zone-info-coords" id="zoneInfoCoords">[-174, 176]</div>
+      
+      <button class="zone-info-btn zone-info-btn-info" id="zoneInfoBtnInfo">INFO</button>
+    </div>
+    
+    <div class="zone-info-footer">
+      <button class="zone-info-btn zone-info-btn-spy" id="zoneInfoBtnSpy">Spy</button>
+      <button class="zone-info-btn zone-info-btn-attack" id="zoneInfoBtnAttack">Attack</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================
+     TROOP SELECTION MODAL (para seleccionar tropas para atacar)
+========================= -->
+<div id="troopSelectionModal" class="modal-overlay hidden">
+  <div class="attack-modal-panel">
+    <button class="attack-modal-close" id="troopSelectionClose">✕</button>
+    <h2 class="attack-modal-title">Attack</h2>
+    
+    <!-- TARGET INFO (arriba a la izquierda) -->
+    <div class="attack-target-info">
+      <div class="attack-target-image">
+        <img id="attackTargetImage" src="" alt="Target">
+      </div>
+      <div class="attack-target-details">
+        <div class="attack-target-level" id="attackTargetLevel">LV.5 CAMP</div>
+        <div class="attack-target-power">
+          <span id="attackTargetPower">104,000</span>
+          <span class="attack-power-icon">🪙</span>
+        </div>
+        <div class="attack-target-coords" id="attackTargetCoords">-175, 176</div>
+      </div>
+    </div>
+    
+    <!-- USE LAST MARCH BUTTON (arriba a la derecha) -->
+    <button class="attack-use-last-btn" id="useLastMarchBtn">Use last march</button>
+    
+    <!-- TROOP CARDS GRID -->
+    <div id="attackTroopCardsGrid" class="attack-troop-cards-grid"></div>
+    
+    <!-- BOTTOM STATS BAR -->
+    <div class="attack-bottom-bar">
+      <div class="attack-stat">
+        <span class="attack-stat-label">Load capacity:</span>
+        <span class="attack-stat-value" id="attackLoadCapacity">0</span>
+      </div>
+      <div class="attack-stat">
+        <span class="attack-stat-label">Estimated time:</span>
+        <span class="attack-stat-value" id="attackEstimatedTime">0</span>
+      </div>
+      <div class="attack-stat">
+        <span class="attack-stat-label">Selected troops:</span>
+        <span class="attack-stat-value" id="attackSelectedTroops">0</span>
+      </div>
+      <div class="attack-stat">
+        <span class="attack-stat-label">Slots left:</span>
+        <span class="attack-stat-value" id="attackSlotsLeft">120,000</span>
+      </div>
+    </div>
+    
+    <!-- ATTACK BUTTON (abajo a la derecha) -->
+    <button id="troopSelectionAttackBtn" class="attack-final-btn">Attack</button>
+  </div>
+</div>
+
+<!-- =========================
+     BATTLE RESULT MODAL (resultados de batalla estilo DoA)
+========================= -->
+<div id="battleResultModal" class="modal-overlay hidden">
+  <div class="battle-report-panel">
+    <button class="battle-report-close" id="battleResultClose">✕</button>
+    <div class="battle-report-title">Report Detail</div>
+    
+    <!-- Battle ID y Info -->
+    <div class="battle-report-info">
+      <div id="battleReportId" class="battle-report-id">Battle ID</div>
+      <div id="battleReportDate" class="battle-report-date">2026/02/16 - 02:06:58</div>
+      <div id="battleReportLocation" class="battle-report-location">
+        <span id="battleReportType">Camp</span>
+        <span>Location: <span id="battleReportCoords">-175,176</span></span>
+      </div>
+    </div>
+    
+    <!-- Victory/Defeat Title -->
+    <h1 id="battleResultTitle" class="battle-result-title victory-title">Victory</h1>
+    
+    <!-- Battle Image -->
+    <div class="battle-result-image-container">
+      <img id="battleResultImage" src="wilderness_win.png" alt="Battle Result" class="battle-result-image">
+    </div>
+    
+    <!-- Rewards Section (lado derecho) -->
+    <div class="battle-rewards-panel" id="battleResultRewardsSection">
+      <h3 class="battle-rewards-title">REWARDS</h3>
+      <div id="battleResultRewards" class="battle-rewards-list"></div>
+    </div>
+    
+    <!-- Logs Button (botón circular) -->
+    <button id="battleLogsBtn" class="battle-logs-btn" title="View Battle Logs">
+      <span class="battle-logs-icon">⟲</span>
+    </button>
+    
+    <!-- Tables Section (Attacker vs Defender) -->
+    <div class="battle-tables-container">
+      <!-- Attacker Table -->
+      <div class="battle-table attacker-table">
+        <h3 class="battle-table-title">Attacker (<span id="attackerName">player</span>)</h3>
+        <table class="battle-stats-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Initial</th>
+              <th>Alive</th>
+              <th>Lost</th>
+            </tr>
+          </thead>
+          <tbody id="attackerStatsBody"></tbody>
+        </table>
+        <div class="battle-table-footer">
+          <span id="attackerPowerLost">0 🪙</span>
+        </div>
+      </div>
+      
+      <!-- Defender Table -->
+      <div class="battle-table defender-table">
+        <h3 class="battle-table-title">Defender</h3>
+        <table class="battle-stats-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Initial</th>
+              <th>Alive</th>
+              <th>Lost</th>
+            </tr>
+          </thead>
+          <tbody id="defenderStatsBody"></tbody>
+        </table>
+        <div class="battle-table-footer">
+          <span id="defenderPowerLost">-104,000 🪙</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================
+     BATTLE LOGS MODAL (logs detallados de batalla)
+========================= -->
+<div id="battleLogsModal" class="modal-overlay hidden">
+  <div class="battle-report-panel">
+    <button class="battle-report-close" id="battleLogsClose">✕</button>
+    <div class="battle-report-title">Report Detail</div>
+    
+    <!-- Battle ID y Info (mismo que arriba) -->
+    <div class="battle-report-info">
+      <div id="logsReportId" class="battle-report-id">Battle ID</div>
+      <div id="logsReportDate" class="battle-report-date">2026/02/16 - 02:06:58</div>
+      <div id="logsReportLocation" class="battle-report-location">
+        <span id="logsReportType">Camp</span>
+        <span>Location: <span id="logsReportCoords">-175,176</span></span>
+      </div>
+    </div>
+    
+    <!-- Victory Title -->
+    <h1 id="logsResultTitle" class="battle-result-title victory-title">Victory</h1>
+    
+    <!-- Battle Image (más pequeña) -->
+    <div class="battle-result-image-container-small">
+      <img id="logsResultImage" src="wilderness_win.png" alt="Battle Result" class="battle-result-image-small">
+    </div>
+    
+    <!-- Rewards Section (mismo que arriba pero compacto) -->
+    <div class="battle-rewards-panel-small" id="logsRewardsSection">
+      <h3 class="battle-rewards-title">REWARDS</h3>
+      <div id="logsRewards" class="battle-rewards-list-small"></div>
+    </div>
+    
+    <!-- Back Button (botón circular para volver) -->
+    <button id="battleLogsBackBtn" class="battle-logs-btn" title="Back to Report">
+      <span class="battle-logs-icon">⟲</span>
+    </button>
+    
+    <!-- Logs Section -->
+    <div class="battle-logs-container">
+      <h3 class="battle-logs-title">LOGS</h3>
+      <div id="battleLogsContent" class="battle-logs-content"></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
